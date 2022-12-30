@@ -1,0 +1,4 @@
+black
+streamlit 
+pandas 
+openpyxl
