@@ -1,0 +1,7 @@
+black
+streamlit 
+pandas 
+openpyxl
+azure-storage-blob
+jupyter
+python-dotenv
