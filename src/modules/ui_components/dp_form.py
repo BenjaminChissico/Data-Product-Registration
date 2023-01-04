@@ -9,22 +9,23 @@ import src.modules.logic.zip_handler as zh
 import src.modules.logic.blob_storage as bs
 
 
-def data_product_form()->dp.DataProductDetails:
+def data_product_form(blob_handler:bs.BlobStorage)->dp.DataProductDetails:
     """Functions asks user for all required information to register a data product.
     """
     with st.form('metadata-registration-form'):
 
         st.markdown("""
         <h3 align=middle> Data Product Detail Information</h3>
-        Please provide all necessary information to catalogue your new Data Product and make it accessable.<br><br>""",unsafe_allow_html=True)
+        <p align=middle>Please provide all necessary information to catalogue your new Data Product and make it accessable.</p><br><br>""",unsafe_allow_html=True)
 
         col1,col2 = st.columns(2)
         with col1:
             st.markdown("<h5 align=middle>Mandatory Information</h5>",unsafe_allow_html=True)
             dp_name = st.text_input(
                 'Data Product Name',placeholder="",
-                help="The Name of the Data Product must match the Name of the Uploaded Folder that contains all data product items"
+                help="The Name of the Data Product must match the Name of the Uploaded Folder that contains all data product items",
                 )
+
             description = st.text_input(
                 'Data Product Description',
                 placeholder="",
@@ -94,6 +95,15 @@ def data_product_form()->dp.DataProductDetails:
         if is_sub and (not dp_name  or not description  or not  domain or not data_owner):
             st.error("Please make sure to fill-out all **mandatory information**!")
             st.stop()
+ 
+    print(dp_name.strip())
+    print(blob_handler.data_products)       
+    
+    if blob_handler.data_product_exists(dp_name.strip()):
+        print("in ")
+        st.error(f"The Data Product: {dp_name} already exists, please provide another name")
+        is_sub = False 
+        st.stop()
     
     # create a data product details information class 
 

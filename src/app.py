@@ -16,17 +16,23 @@ from dotenv import load_dotenv
 
 def create_app():
     st.set_page_config(layout="wide",page_title="Data Product Ingestion")
-    st.write("# Welcome :wave:")
-    st.write("## Data Product Ingestion")
-
+    st.markdown("<h1 align=middle>Welcome to the Data Shop Ingestion Application</h1>",unsafe_allow_html=True)
     # will hold all tutorial information later, either youtube video or saved movie clip in storage
     with st.expander("""New here? Watch the tutorial, then :point_down:"""):
         url = "https://www.youtube.com/watch?v=gy1B3agGNxw"
         st.video(url)
 
 
+    # only for local development 
+    load_dotenv()
+
+    azure_account_url = os.environ['AZURE_ACCOUNT_URL']
+    azure_container_name = os.environ['DATA_PRODUCTS_CONTAINER_NAME']
+    blob_handler = bs.BlobStorage(azure_account_url,azure_container_name)
+    
+
     # get all the information of the data product 
-    dp_details = dp_form.data_product_form()    
+    dp_details = dp_form.data_product_form(blob_handler)    
     file = dp_form.upload_data_product()
 
     # read the content of the data product and create details 
@@ -34,23 +40,14 @@ def create_app():
 
     # init azure account details 
     
-    # only for local development 
-    load_dotenv()
-
-    azure_account_url = os.environ['AZURE_ACCOUNT_URL']
-    azure_container_name = os.environ['DATA_PRODUCTS_CONTAINER_NAME']
-    blob_handler = bs.BlobStorage(azure_account_url,azure_container_name)
     filled_dp_details = dp_form.register_product(file,dp_details,blob_handler)
     
-    data  = filled_dp_details.whole_data_product_to_dict()
+    #TODO needs to be pushed to the front-end
+    json_details  = filled_dp_details.whole_data_product_to_dict()
     st.success("Succesfully uploaded to azure & here are the details")
     
 
-    # only for testing 
-    import json 
-    for dct in data:
-        with open(f'./data/{dct["id"]}.JSON','w') as f:
-            f.write(json.dumps(dct,indent=2))
+
 
 
 
