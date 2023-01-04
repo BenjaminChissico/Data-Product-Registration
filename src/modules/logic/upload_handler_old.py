@@ -1,7 +1,7 @@
 """This modules contains all functionality for the upload to work as intended"""
 import zipfile
 import io
-from src.modules.logic.storage_handler import BlobHandler
+from src.modules.logic.storage_handler_old import BlobHandler
 from streamlit.runtime.uploaded_file_manager import UploadedFile
 
 

@@ -2,152 +2,186 @@
 data product registration form
 """
 import streamlit as st
-import os
-from dotenv import load_dotenv
-from src.modules.logic.upload_handler import DataProductUpload
+import src.modules.logic.data_reader as dr
+import src.modules.logic.data_product_details as dp
+from streamlit.runtime.uploaded_file_manager import UploadedFile
+import src.modules.logic.zip_handler as zh
+import src.modules.logic.blob_storage as bs
 
 
-def upload_data_product():
-    """Functions holds all streamlit components that make up the
-    data product uploading part of the application.
-    The uploaded format needs to adhere to the following format:
-    1. Must be a .zip file!
-    2. In the root of the zip file is only one folder, the name of the folder represents the name of the data product (must be identical to the provided name)
-    3. The folder mentioned in 2. has only one level underneath it, the data product item level.
-    4. The data product items must be in the supported file format, can cannot contain any further folders, if more folders are detected, the function will throw an excpection.
-
-    Visualization of the zip file structure:
-
-    |__ A ZipFile.zip
-        |__ Data Product Name Folder
-                Data Product Item (File)
-                Data Product Item (File)
-                Data Product Item (File)
-                Data Product Item (File)
-                Data Product Item (File)
+def data_product_form()->dp.DataProductDetails:
+    """Functions asks user for all required information to register a data product.
     """
+    with st.form('metadata-registration-form'):
 
-    with st.form("DPUpload"):
-        zip_file = st.file_uploader(
-            "Upload your Data Product as **Zip**",
-            type="zip",
-        )
+        st.markdown("""
+        <h3 align=middle> Data Product Detail Information</h3>
+        Please provide all necessary information to catalogue your new Data Product and make it accessable.<br><br>""",unsafe_allow_html=True)
 
-        is_sub = st.form_submit_button("Upload your Data Product")
-        if not is_sub or zip_file is None:
-            # we will wait until the button is pressed
+        col1,col2 = st.columns(2)
+        with col1:
+            st.markdown("<h5 align=middle>Mandatory Information</h5>",unsafe_allow_html=True)
+            dp_name = st.text_input(
+                'Data Product Name',placeholder="",
+                help="The Name of the Data Product must match the Name of the Uploaded Folder that contains all data product items"
+                )
+            description = st.text_input(
+                'Data Product Description',
+                placeholder="",
+                help="Please provide an **informative** and **short** description of what the Data Product is about."
+            )
+            schema_version = st.number_input(
+                'Schema Version',
+                min_value=1,
+                help="Please Provide a **Sehma Version Number** of your Data Product to ensure up to dateness."
+            )
+            domain = st.text_input(
+                'Data Product Domain',
+                placeholder="e.g., UEDH, ODS, SAS",
+                help="Please provide the data product's domain it belongs to."
+            )
+
+            data_owner = st.text_input(
+                'Data Product Data Owner',
+                placeholder="e.g., Max Mustermann, Jana Doe",
+                help="Please provide the Name of the **Data Owner** of the data product."
+            )
+            language = st.multiselect(
+                'Please provide the language your data contains',
+                ['en','de'],
+                help="Please provide the **Language** your data product is in, you can also supply multiple languages."
+            )
+            
+            restriction_type = st.selectbox(
+                'Restriction Type',
+                #TODO: should be in its own file to easily update
+                ['private','public'],
+                help="Please provide the **Restriction Type** of your data product, to help automate access if possible."
+            )
+
+        with col2:
+            st.markdown("<h5 align=middle>Optional Information</h5>",unsafe_allow_html=True)
+
+            description_long = st.text_area(
+                'Data Product Extended Description (Optional)',
+                placeholder="",
+                help="Please provide an **informative** and **longer** description of what the Data Product is about, in more detail."
+            )
+    
+            tags = st.multiselect(
+                'Data Product Tags',
+                #TODO: Tags should be in there on file to easily update
+                ['PRODUCTION','TEST-DATA','FAKE-DATA','Life'],
+                help="Please provide **Tags** that help to describe your data product and make it more transparent."
+            )
+
+            technical_lead = st.text_input(
+                'Data Product Technical Lead',
+                placeholder="e.g., Max Mustermann, Jana Doe",
+                help="Please provide the Name(s) of the **Technical Lead** of the data product."
+            )
+            business_owner = st.text_input(
+                'Data Product Business Owner',
+                placeholder="e.g., Max Mustermann, Jana Doe",
+                help="Please provide the Name(s) of the **Business Owner** of the data product."
+            )
+
+
+        is_sub = st.form_submit_button('Submit Data Product Information')
+        
+        if not is_sub and  (not dp_name  or not description  or not  domain or not data_owner):
             st.stop()
-
-    # TODO display all the items and the name of the data product for a check, and let the user decide if everything is correct or not
-
-    # only for development -> load env variable
-    load_dotenv()
-
-    azure_account_name = os.environ["AZURE_ACCOUNT_URL"]
-    azure_container_name = os.environ["DATA_PRODUCTS_CONTAINER_NAME"]
-
-    dp_product = DataProductUpload(zip_file, azure_account_name, azure_container_name)
-    dp_product.check_dp_in()
-
-    st.balloons()
-    st.success("Data Product is there ;) :smile:")
-
-
-def register_dp_product():
-    """Function holds all streamlit components that make up
-    the registration process for a new data product.
-    """
-    # Tag List
-    tag_list = [
-        "PRODUCTION",
-        "Test-Data",
-        "Delta-Load",
-        "Full-Load",
-        "Business Logic",
-        "RAW-Data",
-    ]
-
-    # Mandatory Information First
-    dp_config = {}
-    with st.form("ApplicationForm"):
-        dp_name = st.text_input(
-            "Data Product Name",
-            placeholder="Name of the Data Product",
-            help="""Please provide the name of the Data Product, the Name will be 
-            displayed in the Data Shop and should help other users to identify easily what 
-            the Data Product represents! 
-            """,
-        )
-
-        data_domain = st.text_input(
-            "Domain",
-            placeholder="e.g., UEDH, SAS",
-            help="""The domain descripes where the data is originated from.
-            Furthermore, it also helps by searching, if a user wants to see all Data Products 
-            of a specific domain. 
-            """,
-        )
-
-        description = st.text_area(
-            "Data Product Description",
-            placeholder="A very detailled description of the Data Product",
-            help="""The data product description helps users to identify and understand the data product faster.  
-            The richer the description of the data product, the better and easier it is for users to determine if they 
-            need the data from the data product.
-            Make sure to provide a meaningful and informative description what your data product provides
-            """,
-        )
-        tags = st.multiselect(
-            "Tags",
-            tag_list,
-            help="""Tags help to descripe the data product by associating key words with the data product.  
-            For example, if the data provided is 'only test data' its wise to provide the 'Test-Data' Tag.  
-            So users know what to expect. On the contrary, if the data is production data, its wise to 
-            provide the 'PRODUCTION' Tag to indicate the value & quality of the data product            
-            """,
-        )
-
-        dp_business_owner = st.text_input(
-            "Name of the Business Owner",
-            placeholder="Max Mustermann",
-            help="""Provide the name of the Business Owner that is responsible for the Data Product, if
-            multiple Business owner are responsible, please separate them with a comma (,), .e.g,
-            Max Mustermann, Jana Doe
-            """,
-        )
-        dp_technical_owner = st.text_input(
-            "Name of the Technical Owner",
-            placeholder="Max Mustermann",
-            help="""Provide the name of the Technical Owner that is responsible for the Data Product, if
-            multiple Technical owner are responsible, please separate them with a comma (,), .e.g,
-            Max Mustermann, Jana Doe
-            """,
-        )
-
-        is_sub = st.form_submit_button("Submit Data Product Details")
-
-        if not is_sub:
-            # we will wait until the button is pressed
+        if is_sub and (not dp_name  or not description  or not  domain or not data_owner):
+            st.error("Please make sure to fill-out all **mandatory information**!")
             st.stop()
+    
+    # create a data product details information class 
 
-    dp_config = {
-        "Data Product Name": dp_name.strip(),
-        "Business Owner": dp_business_owner.strip(),
-        "Technical Owner": dp_technical_owner.strip(),
-        "Tags": tags if tags else "",
-        "Description": description.strip(),
+    dp_info = {
+        'domain':domain,
+        'description':description,
+        'data_owner':data_owner,
+        'language':language,
+        'description_long':description_long if description_long else None,
+        'business_owner':business_owner if business_owner else None,
+        'technical_lead':technical_lead if technical_lead else None,
+    }    
+    dp_info_obj = dp.DataProductDetailsInformation(**dp_info)
+
+    # create a Data Product Details Object that holds all necessary information 
+    
+    dp_details_dct = {
+        'data_product_name':dp_name.strip(),
+        'schema_version':schema_version,
+        'data_product_details_information':dp_info_obj,
+        'tags': tags
     }
-    # data product data uplaod
 
-    st.write("## Upload Section")
-    with st.expander("Show Upload Rules"):
-        # Upload rules in resources later
-        st.write(
-            """Here you can find a detailled explanation of how the upload should look like.  
-        This will include the following information:
-        - a written description 
-        - a visual description of the structure 
-        """
-        )
+    dp_details = dp.DataProductDetails(**dp_details_dct)
+    return dp_details
 
-    return dp_config
+
+
+def upload_data_product()->UploadedFile:
+    """Function that create the streamlit component and logic for the zip file upload"""
+    allowed_type = "zip"
+    zip_file = st.file_uploader(
+        'Upload the Data Product',
+        type=allowed_type,
+        help="Upload the ZipFile which contains the Data Product"
+    )
+
+    if zip_file is None:
+        st.stop()
+    
+    return zip_file
+
+
+
+def register_product(file:UploadedFile,data_product_details:dp.DataProductDetails,blob_handler)->dp.DataProductDetails:
+    """Function handles the extraction of the zip data.
+    It returns the data one by one to be uploaded and also be analysed for the catalog which is needed in the front-end
+    """
+
+    # will hold all tables extracted from the zipFile (including the column information)
+    tables: list[dp.DataProductDetailSampleDataTable] = []
+    
+
+    # init the zip file 
+    zip_file = zh.ZipHandler(file,data_product_details.data_product_name)
+    
+
+    # loop over the zip content 
+    for bytes_data,file_name in zip_file.extract_dp_items():
+        # get the Table & Column information for the front-end catalog 
+        table = create_table_n_column_details(file_name,data_product_details,bytes_data,dr.DataReader)
+        tables.append(table)
+    
+        # upload the data to the blob 
+        # the file_name must be combined with the data product name with a forward flash to create a "folder" in the container
+        file_name = f"{data_product_details.data_product_name}/{file_name}"
+
+
+        upload_data(file_name,bytes_data,blob_handler)
+    
+    # register all tables and columns 
+
+    data_product_details.register_product_detail_sample_data_tables(tables)
+    return data_product_details
+
+    
+
+
+
+def upload_data(item_name:str,data:bytes,blob_handler:bs.BlobStorage)->None:
+    """Uploads a item to the BlobStorage specified in the blob_handler
+    the item_name must consist of the full path, including folders indicated with "/"
+    """
+    blob_handler.upload_a_file(data,item_name)
+
+def create_table_n_column_details(file_name:str,data_product_details:dp.DataProductDetails,data:bytes,data_reader:dr.DataReader)->dp.DataProductDetailSampleDataTable:
+    """Reads the byte code in and turns it into a Data Product Detail Sample Data Table, with Data Columns already registered"""
+
+    data_r = data_reader(file_name,data)
+    table = dp.DataProductDetailSampleDataTable(file_name,data_product_details.schema_version,data_product_details.id,data_r.data)
+    return table 
