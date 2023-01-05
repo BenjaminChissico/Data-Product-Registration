@@ -7,6 +7,9 @@ import os
 import streamlit as st
 import src.modules.ui_components.dp_form as dp_form
 import src.modules.logic.blob_storage as bs
+from dotenv import load_dotenv
+import requests
+import json
 
 
 # only needed for local testing
@@ -29,6 +32,7 @@ def create_app():
 
     azure_account_url = os.environ["AZURE_ACCOUNT_URL"]
     azure_container_name = os.environ["DATA_PRODUCTS_CONTAINER_NAME"]
+    create_endpoint = os.environ["CREATE_ENDPOINT"]
     blob_handler = bs.BlobStorage(azure_account_url, azure_container_name)
 
     # get all the information of the data product
@@ -44,8 +48,15 @@ def create_app():
 
     # TODO needs to be pushed to the front-end
     json_details = filled_dp_details.whole_data_product_to_dict()
-    st.success("Succesfully uploaded to azure & here are the details")
-    st.write(json_details)
+
+    # push via post request
+    for json_file in json_details:
+        json_body = json.dumps(json_file, indent=2)
+        r = requests.post(create_endpoint, json=json_body)
+        r.raise_for_status()
+
+    st.ballons()
+    st.success("Successfully uploaded the Data Product")
 
 
 if __name__ == "__main__":

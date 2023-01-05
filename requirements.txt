@@ -5,3 +5,4 @@ openpyxl
 azure-storage-blob
 pyarrow
 python-dotenv
+requests

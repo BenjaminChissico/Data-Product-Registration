@@ -100,7 +100,7 @@ class DataProductDetails:
             "tags": self.tags,
             "information": self.data_product_details_information,
             "flags": self.flags,
-            "access_details":self.access_details
+            "access_details": self.access_details,
         }
         return dp_data
 
@@ -181,6 +181,10 @@ class DataProductDetailSampleDataTable:
             )
         return sample_data_columns
 
+    def get_all_registered_column_ids(self) -> list[str]:
+        """Returns all the uuids of the registered columns as list"""
+        return [column["id"] for column in self.columns]
+
     def to_dict(self) -> dict[str, str]:
         data = {
             "name": self.data_table_name,
@@ -188,6 +192,7 @@ class DataProductDetailSampleDataTable:
             "data_product_id": self.parent_id,
             "object_type": self.object_type,
             "id": self.id,
+            "columns": self.get_all_registered_column_ids(),
         }
         return data
 
