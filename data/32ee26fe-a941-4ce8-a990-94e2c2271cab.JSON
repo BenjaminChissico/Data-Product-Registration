@@ -1,7 +1,0 @@
-{
-  "column_name": "TIME_TO_NEXT_DUNNING_IN_MONTHS",
-  "id": "32ee26fe-a941-4ce8-a990-94e2c2271cab",
-  "data_type": "int64",
-  "schema_version": 1,
-  "table_id": "e01e88fd-00bb-4d72-b756-409ea93163e3"
-}
