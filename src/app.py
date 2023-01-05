@@ -10,6 +10,10 @@ import src.modules.logic.blob_storage as bs
 from dotenv import load_dotenv
 import requests
 import json
+from functools import partial
+
+
+from tqdm.contrib.concurrent import thread_map
 
 
 # only needed for local testing
@@ -50,13 +54,18 @@ def create_app():
     json_details = filled_dp_details.whole_data_product_to_dict()
 
     # push via post request
-    for json_file in json_details:
-        json_body = json.dumps(json_file, indent=2)
-        r = requests.post(create_endpoint, json=json_body)
-        r.raise_for_status()
 
-    st.ballons()
+    partial_process_json_file = partial(process_json_file, url=create_endpoint)
+    thread_map(partial_process_json_file, json_details)
+
+    st.balloons()
     st.success("Successfully uploaded the Data Product")
+
+
+def process_json_file(dct: dict[str, str], url: str):
+    """Sends a post request to the url"""
+    json_file = json.dumps(dct, indent=2)
+    requests.post(url, json_file)
 
 
 if __name__ == "__main__":
