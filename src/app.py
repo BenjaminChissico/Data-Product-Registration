@@ -45,6 +45,7 @@ def create_app():
     # TODO needs to be pushed to the front-end
     json_details = filled_dp_details.whole_data_product_to_dict()
     st.success("Succesfully uploaded to azure & here are the details")
+    st.write(json_details)
 
 
 if __name__ == "__main__":
