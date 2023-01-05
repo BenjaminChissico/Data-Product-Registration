@@ -31,9 +31,9 @@ class SupportedFileTypes(Enum):
         supported_read_methods = {
             SupportedFileTypes.PARQUET: pd.read_parquet,
             SupportedFileTypes.CSV: partial(pd.read_csv,sep=",",encoding="utf-8",header=0),
-            SupportedFileTypes.XLS: pd.read_excel,
-            SupportedFileTypes.XLSX: pd.read_excel,
-            SupportedFileTypes.XLSM: pd.read_excel,
+            SupportedFileTypes.XLS: partial(pd.read_excel,engine="openpyxl"),
+            SupportedFileTypes.XLSX: partial(pd.read_excel,engine="openpyxl"),
+            SupportedFileTypes.XLSM: partial(pd.read_excel,engine="openpyxl"),
 
         }
         

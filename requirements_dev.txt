@@ -6,3 +6,5 @@ azure-storage-blob
 jupyter
 python-dotenv
 pyarrow
+pytest 
+pytest-cov

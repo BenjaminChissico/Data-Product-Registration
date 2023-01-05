@@ -33,6 +33,16 @@ class BlobStorage:
 
 
 
+    def data_product_exists(self,dp_name:str)->bool:
+        """Checks the blob storage if a given data product already exists
+        Returns:
+            True: it exists 
+            False: does not exists
+        """
+        # get all data products 
+        existing_data_products = self.data_products
+        return dp_name.lower() in existing_data_products
+
 
     @property
     def data_products(self)->list[str]:
@@ -42,7 +52,7 @@ class BlobStorage:
         blobs = blob_client.list_blobs()
 
         # data products are only the first string before the first "/"
-        data_products = [str(blob).split("/")[0] for blob in blobs]
+        data_products = [str(blob.name).split("/")[0].lower() for blob in blobs]
         data_products = set(data_products)
         data_products = list(data_products)
         return data_products
