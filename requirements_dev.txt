@@ -8,3 +8,4 @@ python-dotenv
 pyarrow
 pytest 
 pytest-cov
+requests 
