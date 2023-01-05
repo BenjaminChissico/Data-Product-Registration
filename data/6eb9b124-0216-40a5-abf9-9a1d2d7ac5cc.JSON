@@ -1,0 +1,19 @@
+{
+  "id": "6eb9b124-0216-40a5-abf9-9a1d2d7ac5cc",
+  "name": "ColdisData ODS",
+  "object_type": "DATA_PRODUCT_DETAILS",
+  "schema_version": 1,
+  "tags": [],
+  "information": {
+    "domain": "UEDH, MSG",
+    "description": "A cool data product",
+    "data_owner": "Benny Owner",
+    "language": [
+      "de",
+      "en"
+    ],
+    "description_long": null,
+    "business_owner": null,
+    "technical_lead": null
+  }
+}

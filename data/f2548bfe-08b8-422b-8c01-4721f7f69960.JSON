@@ -1,0 +1,7 @@
+{
+  "column_name": "TARGET_PAYMENT_DATE_INT",
+  "id": "f2548bfe-08b8-422b-8c01-4721f7f69960",
+  "data_type": "int64",
+  "schema_version": 1,
+  "table_id": "bd99b8c8-89f5-4784-ac35-701f858bafee"
+}

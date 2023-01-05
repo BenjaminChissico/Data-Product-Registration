@@ -1,0 +1,7 @@
+{
+  "column_name": "RECIPIENT_COUNTRY_SUBDIVISION",
+  "id": "cb8a0dfc-99f4-4eae-a2b3-c66fccd84e11",
+  "data_type": "float64",
+  "schema_version": 1,
+  "table_id": "fd70d0d1-c005-4fa1-8460-a8dc276d017d"
+}

@@ -1,0 +1,7 @@
+{
+  "column_name": "CURRENCY_OF_TRANSACTION",
+  "id": "bdd980f4-1640-4d8a-ad50-fdfec648c371",
+  "data_type": "string",
+  "schema_version": 1,
+  "table_id": "bd99b8c8-89f5-4784-ac35-701f858bafee"
+}

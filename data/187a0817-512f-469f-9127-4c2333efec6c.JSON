@@ -1,0 +1,7 @@
+{
+  "column_name": "BANK_TRANSACTION_TYPE",
+  "id": "187a0817-512f-469f-9127-4c2333efec6c",
+  "data_type": "int64",
+  "schema_version": 1,
+  "table_id": "fd70d0d1-c005-4fa1-8460-a8dc276d017d"
+}

@@ -1,0 +1,7 @@
+{
+  "column_name": "RECIPIENT_IBAN",
+  "id": "f18ebf14-e003-4ed7-b05a-70d50ead7b60",
+  "data_type": "string",
+  "schema_version": 1,
+  "table_id": "fd70d0d1-c005-4fa1-8460-a8dc276d017d"
+}
