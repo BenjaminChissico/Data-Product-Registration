@@ -183,7 +183,7 @@ class DataProductDetailSampleDataTable:
 
     def get_all_registered_column_ids(self) -> list[str]:
         """Returns all the uuids of the registered columns as list"""
-        return [column["id"] for column in self.columns]
+        return [column.id for column in self.columns]
 
     def to_dict(self) -> dict[str, str]:
         data = {
