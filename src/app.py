@@ -32,7 +32,7 @@ def create_app():
 
     azure_account_url = os.environ["AZURE_ACCOUNT_URL"]
     azure_container_name = os.environ["DATA_PRODUCTS_CONTAINER_NAME"]
-    create_endpoint = os.environ["CREATE_ENDPOINT"]
+    create_endpoint = os.environ["CREATE_ENDPOINT_FRONTEND"]
     blob_handler = bs.BlobStorage(azure_account_url, azure_container_name)
 
     # get all the information of the data product
@@ -50,12 +50,30 @@ def create_app():
     json_details = filled_dp_details.whole_data_product_to_dict()
 
     # push via post request
-    for json_file in json_details:
-        json_body = json.dumps(json_file, indent=2)
-        r = requests.post(create_endpoint, json=json_body)
-        r.raise_for_status()
+    # for json_file in json_details:
+    #     json_body = json.dumps(json_file, indent=2)
+    #     r = requests.post(create_endpoint, json=json_body)
+    #     r.raise_for_status()
 
-    st.ballons()
+    # push minimal data_product inforamtion to api back-end
+    admin_pw = os.environ["ADMIN_PW"]
+    backend_endpoint = os.environ["CREATE_ENDPOINT_BACKEND"]
+    dp_dict = dp_details.to_dict()
+
+    data_body = {
+        "name": dp_dict["name"],
+        "data_owner": dp_dict["information"]["data_owner"],
+        "schema_version": dp_dict["schema_version"],
+        "restriction_type": dp_dict["access_details"]["restriction_type"],
+        "data_product_id": dp_dict["id"],
+        "password": admin_pw,
+    }
+    st.write(data_body)
+
+    r = requests.post(backend_endpoint, data=data_body)
+    r.raise_for_status()
+
+    st.balloons()
     st.success("Successfully uploaded the Data Product")
 
 

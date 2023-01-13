@@ -49,7 +49,7 @@ class DataProductDetails:
     data_product_name: str
     schema_version: int
     access_details: AccessDetails
-    data_product_details_information: DataProductDetails
+    data_product_details_information: DataProductDetailsInformation
     tags: Optional[list[str]] = field(default_factory=list)
 
     # TODO access_details & flags missing
