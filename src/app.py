@@ -12,6 +12,9 @@ import requests
 import json
 
 
+from tqdm.contrib.concurrent import thread_map
+
+
 # only needed for local testing
 from dotenv import load_dotenv
 
@@ -50,6 +53,7 @@ def create_app():
     json_details = filled_dp_details.whole_data_product_to_dict()
 
     # push via post request
+<<<<<<< HEAD
     # for json_file in json_details:
     #     json_body = json.dumps(json_file, indent=2)
     #     r = requests.post(create_endpoint, json=json_body)
@@ -72,6 +76,11 @@ def create_app():
     r = requests.post(backend_endpoint, data=data_body)
     r.raise_for_status()
 
+=======
+    json_body = json.dumps(json_details)
+    r = requests.post(create_endpoint, json_body)
+
+>>>>>>> 332a15c975ffd7c61cdb5d1272672ad215e22285
     st.balloons()
     st.success("Successfully uploaded the Data Product")
 

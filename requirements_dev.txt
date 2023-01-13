@@ -9,3 +9,4 @@ pyarrow
 pytest 
 pytest-cov
 requests 
+tqdm

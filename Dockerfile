@@ -8,8 +8,7 @@
 FROM python:3.10-slim 
 WORKDIR /app 
 COPY ./src/ /app/src
-COPY ./.streamlit/ /app/.streamlit  
-COPY ./.env /app   
+COPY ./.streamlit/ /app/.streamlit    
 COPY ./requirements.txt /app   
 COPY ./main.py /app   
 

@@ -35,7 +35,6 @@ class AccessDetails:
 
     restriction_type: str
     request_mode: str
-    # TODO:  nees to be figured out so hardcoded for now
     request_address: str = "TBD. LATER"
 
     def to_dict(self) -> dict[str, str | list[str]]:
@@ -66,10 +65,8 @@ class DataProductDetails:
 
         # create the flags
         # TODO: didn't figure out how to provide the sample data, so its False for now
-        # TODO: ask flo why he needs that information twice
         self.flags = {
             "has_sample_data": False,
-            "access_restriciton": self.access_details["restriction_type"],
         }
 
         # TODO: Figure out how we can best provide this from both perspective, front-end and back-end
