@@ -68,7 +68,6 @@ def create_app():
         "data_product_id": dp_dict["id"],
         "password": admin_pw,
     }
-    st.write(data_body)
 
     r = requests.post(backend_endpoint, data=data_body)
     r.raise_for_status()
