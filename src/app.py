@@ -57,7 +57,7 @@ def create_app():
         json_body = json.dumps(json_file, indent=2)
         r = requests.post(create_endpoint, json=json_body)
         # r.raise_for_status()
-    logger.waring(
+    logger.warning(
         f"Posted to Flo's website, Status Code: {r.status_code}, url: {create_endpoint}"
     )
     logger.warning(f"BODY OF RESP, {r.text}")
