@@ -40,7 +40,6 @@ def create_app():
 
     azure_account_url = os.environ["AZURE_ACCOUNT_URL"]
     azure_container_name = os.environ["DATA_PRODUCTS_CONTAINER_NAME"]
-    create_endpoint = os.environ["CREATE_ENDPOINT_FRONTEND"]
     blob_handler = bs.BlobStorage(azure_account_url, azure_container_name)
 
     # get all the information of the data product
