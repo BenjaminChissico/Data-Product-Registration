@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 def create_app():
     st.set_page_config(layout="wide", page_title="Data Product Ingestion")
     st.markdown(
-        "<h1 align=middle>Welcome to the Data Shop Ingestion Application</h1>",
+        "<h1 align=middle>Welcome to the Data Shop Ingestion Application Very deployed</h1>",
         unsafe_allow_html=True,
     )
     # will hold all tutorial information later, either youtube video or saved movie clip in storage
@@ -57,10 +57,10 @@ def create_app():
         json_body = json.dumps(json_file, indent=2)
         r = requests.post(create_endpoint, json=json_body)
         # r.raise_for_status()
-    logger.info(
+    logger.waring(
         f"Posted to Flo's website, Status Code: {r.status_code}, url: {create_endpoint}"
     )
-    logger.info(f"BODY OF RESP, {r.text}")
+    logger.warning(f"BODY OF RESP, {r.text}")
 
     # push minimal data_product inforamtion to api back-end
     admin_pw = os.environ["ADMIN_PW"]
