@@ -7,6 +7,11 @@ import os
 import streamlit as st
 import src.modules.ui_components.dp_form as dp_form
 import src.modules.logic.blob_storage as bs
+from src.modules.logic.posts import (
+    post_data_product_data_column_details,
+    post_data_product_data_table_details,
+    post_data_product_details,
+)
 from dotenv import load_dotenv
 import requests
 import json
@@ -45,23 +50,25 @@ def create_app():
     # read the content of the data product and create details
     # afterwards push the data product to azure
 
-    # init azure account details
-
     filled_dp_details = dp_form.register_product(file, dp_details, blob_handler)
 
-    # TODO needs to be pushed to the front-end
-    json_details = filled_dp_details.whole_data_product_to_dict()
+    # push the data products, data product table and data product column details to the front-end database
 
-    # push via post request
-    logger.info("Starting the transfer to Flo's API")
-    r = requests.post(create_endpoint, json=json_details)
-    # r.raise_for_status()
-    logger.warning(r.json())
-    try:
-        r.raise_for_status()
-    except requests.exceptions.HTTPError as e:
-        logger.warning("HTTPError", str(e))
-        raise Exception(json.dumps(r.json(), indent=2))
+    data_product_endpoint_url = os.environ["DATA_PRODUCT_DETAIL_ENDPOINT"]
+    data_product_table_endpoint_url = os.environ["DATA_PRODUCT_TABLE_DETAIL_ENDPOINT"]
+    data_product_column_endpoint_url = os.environ["DATA_PRODUCT_COLUMN_DETAIL_ENDPOINT"]
+
+    logger.info("Data Processed")
+    logger.info("Start with Posting")
+
+    post_data_product_details(filled_dp_details, data_product_endpoint_url)
+    post_data_product_data_table_details(
+        filled_dp_details, data_product_table_endpoint_url
+    )
+    post_data_product_data_column_details(
+        filled_dp_details, data_product_column_endpoint_url
+    )
+
     # push minimal data_product inforamtion to api back-end
     admin_pw = os.environ["ADMIN_PW"]
     backend_endpoint = os.environ["CREATE_ENDPOINT_BACKEND"]
@@ -76,6 +83,7 @@ def create_app():
         "password": admin_pw,
     }
 
+    logger.info("Start Posting to Backend API")
     r = requests.post(backend_endpoint, data=data_body)
     r.raise_for_status()
 
