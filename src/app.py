@@ -10,13 +10,13 @@ import src.modules.logic.blob_storage as bs
 from dotenv import load_dotenv
 import requests
 import json
-
-
-from tqdm.contrib.concurrent import thread_map
+import logging
 
 
 # only needed for local testing
 from dotenv import load_dotenv
+
+logger = logging.getLogger(__name__)
 
 
 def create_app():
@@ -57,6 +57,9 @@ def create_app():
         json_body = json.dumps(json_file, indent=2)
         r = requests.post(create_endpoint, json=json_body)
         r.raise_for_status()
+    logger.info(
+        f"Posted to Flo's website, Status Code: {r.status_code}, url: {create_endpoint}"
+    )
 
     # push minimal data_product inforamtion to api back-end
     admin_pw = os.environ["ADMIN_PW"]
