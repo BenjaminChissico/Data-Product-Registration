@@ -226,11 +226,12 @@ class DataProductDetailSampleDataColumn:
     def to_dict(self) -> dict[str, str]:
         """Returns the most important variables as dictionary"""
         data = {
-            "column_name": self.column_name,
+            "name": self.column_name,
             "id": self.id,
             "data_type": self.data_type,
             "schema_version": self.schema_version,
-            "table_id": self.parent_id,
+            "object_type": self.object_type,
+            "data": list(),
         }
         return data
 
