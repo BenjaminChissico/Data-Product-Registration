@@ -53,10 +53,10 @@ def create_app():
     json_details = filled_dp_details.whole_data_product_to_dict()
 
     # push via post request
-    # for json_file in json_details:
-    #     json_body = json.dumps(json_file, indent=2)
-    #     r = requests.post(create_endpoint, json=json_body)
-    #     r.raise_for_status()
+    for json_file in json_details:
+        json_body = json.dumps(json_file, indent=2)
+        r = requests.post(create_endpoint, json=json_body)
+        r.raise_for_status()
 
     # push minimal data_product inforamtion to api back-end
     admin_pw = os.environ["ADMIN_PW"]

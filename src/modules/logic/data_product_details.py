@@ -35,7 +35,7 @@ class AccessDetails:
 
     restriction_type: str
     request_mode: str
-    request_address: str = "TBD. LATER"
+    request_address: str = "https://fa-odsapi-dev01.azurewebsites.net/admin/api/v1/data_product_details/create_item"
 
     def to_dict(self) -> dict[str, str | list[str]]:
         """Wrapper around the self.__dict__ method, returns all self variables of the object as dictionary"""
