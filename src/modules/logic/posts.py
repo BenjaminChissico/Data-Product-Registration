@@ -17,7 +17,11 @@ def post_data_product_details(
     logger.info("Pushing Data Product Details in Data Shop Store")
     data = dp_details.to_dict()
     r = requests.post(endpoint_url, json=data)
-    r.raise_for_status()
+    try:
+        r.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        logger.error(f"An Error occurred: {e}")
+        logger.warning(f"The Error Stacktrace: {r.json()}")
     logger.info("Posting Done")
 
 
