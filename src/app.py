@@ -53,10 +53,15 @@ def create_app():
     json_details = filled_dp_details.whole_data_product_to_dict()
 
     # push via post request
+    logger.info("Starting the transfer to Flo's API")
     r = requests.post(create_endpoint, json=json_details)
-    r.raise_for_status()
+    # r.raise_for_status()
     logger.warning(r.json())
-
+    try:
+        r.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        logger.warning("HTTPError", str(e))
+        raise Exception(json.dumps(r.json(), indent=2))
     # push minimal data_product inforamtion to api back-end
     admin_pw = os.environ["ADMIN_PW"]
     backend_endpoint = os.environ["CREATE_ENDPOINT_BACKEND"]
