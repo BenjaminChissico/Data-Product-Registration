@@ -53,14 +53,9 @@ def create_app():
     json_details = filled_dp_details.whole_data_product_to_dict()
 
     # push via post request
-    for json_file in json_details:
-        json_body = json.dumps(json_file, indent=2)
-        r = requests.post(create_endpoint, json=json_body)
-        # r.raise_for_status()
-    logger.warning(
-        f"Posted to Flo's website, Status Code: {r.status_code}, url: {create_endpoint}"
-    )
-    logger.warning(f"BODY OF RESP, {r.text}")
+    r = requests.post(create_endpoint, json=json_details)
+    r.raise_for_status()
+    logger.warning(r.json())
 
     # push minimal data_product inforamtion to api back-end
     admin_pw = os.environ["ADMIN_PW"]
