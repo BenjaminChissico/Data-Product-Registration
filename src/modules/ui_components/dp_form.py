@@ -128,7 +128,8 @@ def data_product_form(blob_handler: bs.BlobStorage) -> dp.DataProductDetails:
         "restriction_type": restriction_type,
         # TODO request mode and request address are hardcoded right now
         "request_mode": "http/json",
-        "request_address": "TBD.LATER",
+        # not needed anymore.
+        # "request_address": "TBD.LATER", 
     }
     access_details_obj = dp.AccessDetails(**access_details)
 
