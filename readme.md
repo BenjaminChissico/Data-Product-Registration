@@ -23,7 +23,10 @@ In the first iteration, the allowed data product file types are as follows
 
 
 ## Limitations 
-TBD.
+
+- No Update mechanism
+- No overwriting mechanism 
+
 
 
 
